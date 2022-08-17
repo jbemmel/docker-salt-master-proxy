@@ -70,6 +70,10 @@ is_arm32 && SALT_BOOTSTRAP_OPTS+=( -I )
 log_info "Installing saltstack ..."
 log_debug "Options: ${SALT_BOOTSTRAP_OPTS[@]}"
 sh "${BOOTSTRAP_FILE}" ${SALT_BOOTSTRAP_OPTS[@]} git "v${SALT_VERSION}"
+
+# JvB: added, install Nornir proxy
+pip3 install nornir-salt salt-nornir --upgrade
+
 chown -R "${SALT_USER}": "${SALT_ROOT_DIR}"
 
 # Configure ssh
@@ -100,6 +104,21 @@ priority=5
 directory=${SALT_HOME}
 environment=HOME=${SALT_HOME}
 command=/usr/local/bin/salt-master
+user=root
+autostart=true
+autorestart=true
+stopsignal=QUIT
+stdout_logfile=${SALT_LOGS_DIR}/supervisor/%(program_name)s.log
+stderr_logfile=${SALT_LOGS_DIR}/supervisor/%(program_name)s.log
+EOF
+
+# configure supervisord to start salt-proxy too
+cat > /etc/supervisor/conf.d/salt-proxy.conf <<EOF
+[program:salt-proxy]
+priority=5
+directory=${SALT_HOME}
+environment=HOME=${SALT_HOME}
+command=/usr/local/bin/salt-proxy --proxyid=proxy -l debug
 user=root
 autostart=true
 autorestart=true
