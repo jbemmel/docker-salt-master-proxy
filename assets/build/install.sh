@@ -71,8 +71,8 @@ log_info "Installing saltstack ..."
 log_debug "Options: ${SALT_BOOTSTRAP_OPTS[@]}"
 sh "${BOOTSTRAP_FILE}" ${SALT_BOOTSTRAP_OPTS[@]} git "v${SALT_VERSION}"
 
-# JvB: added, install Nornir proxy
-pip3 install nornir-salt salt-nornir --upgrade
+# JvB: added, install Nornir proxy, upgrade importlib-metadata to latest
+pip3 install nornir-salt salt-nornir importlib-metadata==4.12.0 --upgrade
 
 chown -R "${SALT_USER}": "${SALT_ROOT_DIR}"
 
