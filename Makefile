@@ -12,7 +12,7 @@ help:
 	@echo "   6. make log          - view log"
 
 build:
-	@docker build --tag=cdalvaro/docker-salt-master:latest . \
+	@docker build --tag=jbemmel/docker-salt-master-proxy:latest . \
 		--build-arg=BUILD_DATE="$(shell date +"%Y-%m-%d %H:%M:%S%:z")" \
 		--build-arg=VCS_REF="$(shell git rev-parse --short HEAD)"
 

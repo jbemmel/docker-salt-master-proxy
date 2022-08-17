@@ -1,4 +1,5 @@
-FROM ubuntu:hirsute-20220113
+# FROM ubuntu:hirsute-20220113
+FROM ubuntu:latest
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -6,7 +7,7 @@ ARG VCS_REF
 # https://github.com/saltstack/salt/releases
 # NOTE: Review org.label-schema.version label if necessary
 ENV SALT_VERSION="3004.2" \
-    PYTHON_VERSION="3.9"
+    PYTHON_VERSION="3.10"
 
 ENV SALT_DOCKER_DIR="/etc/docker-salt" \
     SALT_ROOT_DIR="/etc/salt" \
@@ -48,7 +49,7 @@ RUN bash ${SALT_BUILD_DIR}/install.sh
 COPY assets/runtime ${SALT_RUNTIME_DIR}
 RUN chmod -R +x ${SALT_RUNTIME_DIR}
 
-COPY assets/sbin/* /usr/local/sbin
+COPY assets/sbin/* /usr/local/sbin/
 
 # Cleaning tasks
 RUN rm -rf "${SALT_BUILD_DIR:?}"/*
