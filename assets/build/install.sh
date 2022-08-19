@@ -71,8 +71,8 @@ log_info "Installing saltstack ..."
 log_debug "Options: ${SALT_BOOTSTRAP_OPTS[@]}"
 sh "${BOOTSTRAP_FILE}" ${SALT_BOOTSTRAP_OPTS[@]} git "v${SALT_VERSION}"
 
-# JvB: added, install Nornir proxy, upgrade importlib-metadata to latest
-pip3 install nornir-salt salt-nornir importlib-metadata==4.12.0 --upgrade
+# JvB: added, install Nornir proxy, upgrade importlib-metadata to latest, add netmiko
+pip3 install nornir-salt salt-nornir[prodmax] importlib-metadata==4.12.0 netmiko --upgrade
 
 chown -R "${SALT_USER}": "${SALT_ROOT_DIR}"
 
@@ -103,7 +103,7 @@ cat > /etc/supervisor/conf.d/salt-master.conf <<EOF
 priority=5
 directory=${SALT_HOME}
 environment=HOME=${SALT_HOME}
-command=/usr/local/bin/salt-master
+command=/usr/local/bin/salt-master -l ${SALT_LOG_LEVEL}
 user=root
 autostart=true
 autorestart=true
@@ -118,7 +118,7 @@ cat > /etc/supervisor/conf.d/salt-proxy.conf <<EOF
 priority=5
 directory=${SALT_HOME}
 environment=HOME=${SALT_HOME}
-command=/usr/local/bin/salt-proxy --proxyid=proxy -l debug
+command=/usr/local/bin/salt-proxy --proxyid=proxy -l ${SALT_LOG_LEVEL}
 user=root
 autostart=true
 autorestart=true
