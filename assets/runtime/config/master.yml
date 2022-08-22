@@ -132,3 +132,6 @@ log_level: {{SALT_LOG_LEVEL}}
 # One of 'garbage', 'trace', 'debug', info', 'warning', 'error', 'critical'.
 # If using 'log_granular_levels' this must be set to the highest desired level.
 log_level_logfile: {{SALT_LEVEL_LOGFILE}}
+
+# Allow minions to push (config) files to the master, for backup
+file_recv: True

@@ -74,6 +74,13 @@ sh "${BOOTSTRAP_FILE}" ${SALT_BOOTSTRAP_OPTS[@]} git "v${SALT_VERSION}"
 # JvB: added, install Nornir proxy, upgrade importlib-metadata to latest, add netmiko
 pip3 install nornir-salt salt-nornir[prodmax] importlib-metadata==4.12.0 netmiko --upgrade
 
+# JvB: add SR Linux Napalm driver
+git clone https://github.com/jbemmel/napalm-srlinux.git
+cd napalm-srlinux
+pip3 install -r requirements.txt
+python3 setup.py install
+cd ..
+
 chown -R "${SALT_USER}": "${SALT_ROOT_DIR}"
 
 # Configure ssh
@@ -103,7 +110,7 @@ cat > /etc/supervisor/conf.d/salt-master.conf <<EOF
 priority=5
 directory=${SALT_HOME}
 environment=HOME=${SALT_HOME}
-command=/usr/local/bin/salt-master -l ${SALT_LOG_LEVEL}
+command=/usr/local/bin/salt-master -l debug --log-file-level=debug
 user=root
 autostart=true
 autorestart=true
@@ -118,7 +125,7 @@ cat > /etc/supervisor/conf.d/salt-proxy.conf <<EOF
 priority=5
 directory=${SALT_HOME}
 environment=HOME=${SALT_HOME}
-command=/usr/local/bin/salt-proxy --proxyid=proxy -l ${SALT_LOG_LEVEL}
+command=/usr/local/bin/salt-proxy --proxyid=proxy -l debug --log-file-level=debug
 user=root
 autostart=true
 autorestart=true
